@@ -8,6 +8,7 @@ public class Model {
 	private Integer age;
 	private Date birthday;
 	private String email;
+	private String mobile;
 	private String create_user;
 	private String update_user;
 	private Date create_date;
@@ -60,6 +61,14 @@ public class Model {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
 	}
 
 	public String getCreate_user() {
