@@ -11,16 +11,21 @@ public class Controler {
 //		}
 
 		Model m1 = new Model();
-		m1.setUser_name("XiaoXia");
-		m1.setAge(20);
+		m1.setUser_name("小美");
+		m1.setAge(17);
 		m1.setSex(1);
 		m1.setBirthday(new Date());
 		m1.setEmail("xiaoxia@gmail.com");
-		m1.setMobile("18810392839");
+		m1.setMobile("1232332332");
 		m1.setCreate_user("geekqi");
 		m1.setUpdate_user("geekqi");
 		m1.setIsdel(1);
 		
-		ge.addModel(m1);
+//		ge.addModel(m1);
+//		m1.setId(4);
+//		ge.updateModel(m1);
+//		ge.delModel(5);
+		Model m2 = ge.get(6);
+		System.out.println(m2.toString());
 	}
 }
