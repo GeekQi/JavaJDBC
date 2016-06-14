@@ -94,13 +94,14 @@ public class ModelEdit {
 		Connection conn = DBUtil.getconnection();
 		// 3.通过数据库的连接操作数据库，实现增删改查
 		Statement stmt = conn.createStatement();
-		ResultSet rs = stmt.executeQuery("select user_name, age from JDBC");
+		ResultSet rs = stmt.executeQuery("select id, user_name, age from JDBC");
 
 		List<Model> lm = new ArrayList<Model>();
 		Model m = null;
 
 		while (rs.next()) {// 怎么从这个对象里面获取到我们想要的数据呢，如果为true则说明里面有数据
 			m = new Model();
+			m.setId(rs.getInt("id"));
 			m.setUser_name(rs.getString("user_name"));
 			m.setAge(rs.getInt("age"));
 			lm.add(m);
