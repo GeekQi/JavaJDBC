@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ModelEdit {
 	public void addModel(Model m) throws Exception {
@@ -107,6 +108,105 @@ public class ModelEdit {
 			// rs.getInt("age"));
 		}
 		return lm;
+	}
+
+	// 注：上述的query方法相当于全部查询，不管这张表里有多少记录，都会查询出来，没有加过滤条件。
+	// 实际开发中，肯定会按照年龄或者性别来查询，我们进一步优化查询方法
+	public List<Model> query(String name, String mobile,String email) throws Exception {
+		List<Model> result = new ArrayList<Model>();
+
+		Connection conn = DBUtil.getconnection();
+		StringBuilder sb = new StringBuilder();
+		sb.append("select * from JDBC");
+
+		// 1.加了一个查询，用户名
+//		sb.append(" where user_name = ? and mobile = ?");
+		//可能记不住全部的名字
+		sb.append(" where user_name like ? and mobile like ? and email like? ");
+		// 2.预编译，然后把参数传进去
+		PreparedStatement ps = conn.prepareStatement(sb.toString());
+//		ps.setString(1, name);
+//		ps.setString(2, mobile);
+		ps.setString(1, "%"+ name + "%");
+		ps.setString(2, "%" + mobile + "%");
+		ps.setString(3, "%" + email + "%");
+		System.out.println(sb.toString());
+		// 3.执行查询
+		ResultSet rst = ps.executeQuery();
+
+		Model mo = null;
+
+		// 遍历这个结果集，并把结果方法放到对象里面。通过集合形式返回过去
+		while (rst.next()) {// 怎么从这个对象里面获取到我们想要的数据呢，如果为true则说明里面有数据
+			mo = new Model();
+			mo.setId(rst.getInt("id"));
+			mo.setUser_name(rst.getString("user_name"));
+			mo.setAge(rst.getInt("age"));
+			mo.setSex(rst.getInt("sex"));
+			mo.setBirthday(rst.getDate("birthday"));
+			// 在新增、修改的时候，传进来的是java.util.Date类型，需要转换成java.sql.Date类型，
+			// 但往回转的时候，通过数据库把java.sql.Date类型转换成java.util.Date类型，就不需要再转了
+			// 因为java.sql.Date类型是java.util.Date的一个子集
+			mo.setEmail(rst.getString("email"));
+			mo.setMobile(rst.getString("mobile"));
+			mo.setCreate_date(rst.getDate("create_date"));
+			mo.setCreate_user(rst.getString("create_user"));
+			mo.setUpdate_date(rst.getDate("update_date"));
+			mo.setUpdate_user(rst.getString("update_user"));
+			mo.setIsdel(rst.getInt("isdel"));
+
+			result.add(mo);
+			// System.out.println(rs.getString("user_name") + "," +
+			// rs.getInt("age"));
+		}
+		return result;
+	}
+	//当传入的参数变得多的时候，可以传入一个集合
+	public List<Model> query(List<Map<String,Object>>params) throws Exception {
+		List<Model> result = new ArrayList<Model>();
+
+		Connection conn = DBUtil.getconnection();
+		StringBuilder sb = new StringBuilder();
+		sb.append("select * from JDBC where 1 = 1");
+
+		if(params!=null& params.size() > 0){
+			for(int i = 0; i < params.size();i++){
+				Map<String,Object>map = params.get(i);
+				sb.append(" and " + map.get("name") + " " + map.get("rela") +" " + map.get("value"));
+			}
+		}
+		// 2.预编译，然后把参数传进去
+		PreparedStatement ps = conn.prepareStatement(sb.toString());
+		System.out.println(sb.toString());
+		// 3.执行查询
+		ResultSet rst = ps.executeQuery();
+
+		Model mo = null;
+
+		// 遍历这个结果集，并把结果方法放到对象里面。通过集合形式返回过去
+		while (rst.next()) {// 怎么从这个对象里面获取到我们想要的数据呢，如果为true则说明里面有数据
+			mo = new Model();
+			mo.setId(rst.getInt("id"));
+			mo.setUser_name(rst.getString("user_name"));
+			mo.setAge(rst.getInt("age"));
+			mo.setSex(rst.getInt("sex"));
+			mo.setBirthday(rst.getDate("birthday"));
+			// 在新增、修改的时候，传进来的是java.util.Date类型，需要转换成java.sql.Date类型，
+			// 但往回转的时候，通过数据库把java.sql.Date类型转换成java.util.Date类型，就不需要再转了
+			// 因为java.sql.Date类型是java.util.Date的一个子集
+			mo.setEmail(rst.getString("email"));
+			mo.setMobile(rst.getString("mobile"));
+			mo.setCreate_date(rst.getDate("create_date"));
+			mo.setCreate_user(rst.getString("create_user"));
+			mo.setUpdate_date(rst.getDate("update_date"));
+			mo.setUpdate_user(rst.getString("update_user"));
+			mo.setIsdel(rst.getInt("isdel"));
+
+			result.add(mo);
+			// System.out.println(rs.getString("user_name") + "," +
+			// rs.getInt("age"));
+		}
+		return result;
 	}
 
 	public Model get(Integer id) throws SQLException {
