@@ -5,6 +5,11 @@ import java.util.Map;
 public class Controler {
 	public void add(Model m) throws Exception {
 		ModelEdit me = new ModelEdit();
+//		me.addModel(m);
+		m.setSex(1);
+		m.setCreate_user("ADMIN");
+		m.setUpdate_user("ADMIN");
+		m.setIsdel(0);
 		me.addModel(m);
 	}
 
